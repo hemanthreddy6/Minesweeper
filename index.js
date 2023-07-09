@@ -1,6 +1,20 @@
+let highScore=0;
+let currentScore;
+let startTime,endTime;
+var scoreUpdater;
+let unlockCount;
+let winning;
+let currentTileID="none";
 document.addEventListener("DOMContentLoaded",createGame);
 function createGame()
 {
+    currentScore=0;
+    unlockCount=0;
+    winning=1;
+    startTime=new Date().getTime() / 1000;
+    document.addEventListener("keydown",function(e){
+        checkKeyPress(e);
+    })
     for(let i=0;i<20;i++)
     {
         let dummy=document.createElement("div");
@@ -13,6 +27,12 @@ function createGame()
             dum.addEventListener("click",function(e){
                 checkClick(e);
             });
+            dum.addEventListener("mouseover",function(e){
+                mouseOver(e);
+            })
+            dum.addEventListener("mouseout",function(e){
+                mouseOut(e);
+            })
             dummy.appendChild(dum);
         }
         document.getElementById("container").appendChild(dummy);
@@ -31,13 +51,15 @@ function createGame()
             console.log(x+"-"+y);
         }
     }
+    scoreUpdater=setInterval(updateScore,1000);
 }
 function checkClick(e)
 {
     let tileID=e.target.id;
     if(document.getElementById(tileID).classList.contains("mine"))
     {
-        alert("YOU CLICKED A MINE");
+        winning=0;
+        gameOver();
     }
     else
     {
@@ -74,11 +96,13 @@ function bfs(x,y)
         tile.innerHTML=countOfMine;
         styleTheTile(tile,countOfMine);
         tile.classList.add("unlocked");
+        unlockCount++;
         return;
     }
     else
     {
         document.getElementById(x+"-"+y).classList.add("unlocked");
+        unlockCount++;
         for(let i=-1;i<=1;i++)
         {
             for(let j=-1;j<=1;j++)
@@ -147,5 +171,55 @@ function styleTheTile(tile,count)
         case 8:
             tile.style.color="white";
             break;
+    }
+}
+function updateScore()
+{
+    currentScore=Math.floor(new Date().getTime() / 1000 - startTime);
+    $("#currentScore").html("Time: "+currentScore);
+
+    console.log("Unlock Count: "+unlockCount);
+    if(unlockCount==325)
+    gameOver();
+}
+function gameOver()
+{
+    if(winning==1)
+    {
+        if(highScore<currentScore&&(unlockCount==325))
+        {
+            alert("WON");
+            highScore=currentScore;
+            $("#highScore").html("High Score: "+highScore);
+        }
+    }
+    else
+    {
+        alert("You lost!");
+    }
+    clearInterval(scoreUpdater);
+}
+function mouseOver(e)
+{
+    currentTileID=e.target.id;
+}
+function mouseOut(e)
+{
+    currentTileID="none";
+}
+function checkKeyPress(e)
+{
+    if(currentTileID=="none"||e.code!='Space')
+    return;
+    else
+    {
+        if(document.getElementById(currentTileID).classList.contains("unlocked"))
+        {
+
+        }
+        else
+        {
+            document.getElementById(currentTileID).innerHTML='<img src="./red-flag.png" width="18px" height="18px">';
+        }
     }
 }
