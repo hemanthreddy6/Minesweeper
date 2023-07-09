@@ -12,7 +12,7 @@ function createGame()
     unlockCount=0;
     winning=1;
     startTime=new Date().getTime() / 1000;
-    document.addEventListener("keydown",function(e){
+    document.addEventListener("keypress",function(e){
         checkKeyPress(e);
     })
     for(let i=0;i<20;i++)
@@ -27,22 +27,22 @@ function createGame()
             dum.addEventListener("click",function(e){
                 checkClick(e);
             });
-            dum.addEventListener("mouseover",function(e){
-                mouseOver(e);
-            })
-            dum.addEventListener("mouseout",function(e){
+            dum.addEventListener("mouseleave",function(e){
                 mouseOut(e);
-            })
+            });
+            dum.addEventListener("mouseenter",function(e){
+                mouseOver(e);
+            });
             dummy.appendChild(dum);
         }
         document.getElementById("container").appendChild(dummy);
     }
-    let count=75,x,y;
+    let count=50,x,y;
     while(count>0)
     {
         x=Math.floor(20*Math.random());
         y=Math.floor(20*Math.random());
-        if(document.getElementById(x+"-"+y).classList.contains("mine"))
+        if(document.getElementById(x+"-"+y).classList.contains("mine")||(x==0&&y==0))
         continue;
         else
         {
@@ -55,15 +55,15 @@ function createGame()
 }
 function checkClick(e)
 {
-    let tileID=e.target.id;
-    if(document.getElementById(tileID).classList.contains("mine"))
+    let tile=document.getElementById(e.target.id).classList;
+    if(tile.contains("mine"))
     {
         winning=0;
         gameOver();
     }
-    else
+    else if(!tile.contains("unlocked")&&!tile.contains("flagged"))
     {
-        bfs(getX(tileID),getY(tileID));
+        bfs(getX(e.target.id),getY(e.target.id));
     }
 }
 function bfs(x,y)
@@ -96,6 +96,7 @@ function bfs(x,y)
         tile.innerHTML=countOfMine;
         styleTheTile(tile,countOfMine);
         tile.classList.add("unlocked");
+        tile.classList.add("hasNumber")
         unlockCount++;
         return;
     }
@@ -120,7 +121,7 @@ function bfs(x,y)
                     {
                         continue;
                     }
-                    if(tile.classList.contains("unlocked")==false)
+                    if(!tile.classList.contains("unlocked")&&!tile.classList.contains("flagged"))
                     {
                         bfs(a,b);
                     }
@@ -177,16 +178,15 @@ function updateScore()
 {
     currentScore=Math.floor(new Date().getTime() / 1000 - startTime);
     $("#currentScore").html("Time: "+currentScore);
-
-    console.log("Unlock Count: "+unlockCount);
-    if(unlockCount==325)
+    if(unlockCount==350)
     gameOver();
+    console.log(currentTileID);
 }
 function gameOver()
 {
     if(winning==1)
     {
-        if(highScore<currentScore&&(unlockCount==325))
+        if(highScore<currentScore&&(unlockCount==350))
         {
             alert("WON");
             highScore=currentScore;
@@ -205,21 +205,88 @@ function mouseOver(e)
 }
 function mouseOut(e)
 {
+    if(e.target.id==currentTileID)
     currentTileID="none";
 }
 function checkKeyPress(e)
 {
-    if(currentTileID=="none"||e.code!='Space')
+    if(currentTileID=="none"||e.code!="Space")
     return;
     else
     {
-        if(document.getElementById(currentTileID).classList.contains("unlocked"))
+        let tile=document.getElementById(currentTileID);
+        if(tile.classList.contains("unlocked"))
         {
-
+            if(!tile.classList.contains("hasNumber"))
+            return;
+            else
+            {
+                spaceOnNumber();
+            }
         }
         else
         {
-            document.getElementById(currentTileID).innerHTML='<img src="./red-flag.png" width="18px" height="18px">';
+            if(tile.innerHTML!="<img src=\"./red-flag.png\" width=\"18px\" height=\"18px\">")
+            {
+                tile.innerHTML="<img src=\"./red-flag.png\" width=\"18px\" height=\"18px\">";
+                tile.classList.add("flagged");
+            }
+            else
+            {
+                tile.innerHTML="";
+                tile.classList.remove("flagged");
+            }
+        }
+    }
+}
+function spaceOnNumber()
+{
+    let x,y,tile,actualCount,realCount=0;
+    actualCount=document.getElementById(currentTileID).innerHTML;
+    for(let i=-1;i<=1;i++)
+    {
+        for(let j=-1;j<=1;j++)
+        {
+            if(i==0&&j==0)
+            continue;
+
+            x=getX(currentTileID)+i;
+            y=getY(currentTileID)+j;
+            if(x<0||x>19||y<0||y>19)
+            continue;
+
+            tile=document.getElementById(x+"-"+y).classList;
+            if(tile.contains("flagged"))
+            realCount++;
+        }
+    }
+
+    console.log(actualCount+"--"+realCount);
+    if(realCount!=actualCount)
+    return;
+
+    for(let i=-1;i<=1;i++)
+    {
+        for(let j=-1;j<=1;j++)
+        {
+            if(i==0&&j==0)
+            continue;
+
+            x=getX(currentTileID)+i;
+            y=getY(currentTileID)+j;
+            if(x<0||x>19||y<0||y>19)
+            continue;
+
+            tile=document.getElementById(x+"-"+y).classList;
+            if(tile.contains("mine")&&!tile.contains("flagged"))
+            {
+                winning=0;
+                gameOver();
+            }
+            else if(!tile.contains("unlocked")&&!tile.contains("flagged"))
+            {
+                bfs(x,y);
+            }
         }
     }
 }
