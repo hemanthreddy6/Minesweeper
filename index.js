@@ -1,4 +1,4 @@
-let highScore=0;
+let highScore=-1;
 let currentScore;
 let startTime,endTime;
 var scoreUpdater;
@@ -8,13 +8,6 @@ let currentTileID="none";
 document.addEventListener("DOMContentLoaded",createGame);
 function createGame()
 {
-    currentScore=0;
-    unlockCount=0;
-    winning=1;
-    startTime=new Date().getTime() / 1000;
-    document.addEventListener("keypress",function(e){
-        checkKeyPress(e);
-    })
     for(let i=0;i<20;i++)
     {
         let dummy=document.createElement("div");
@@ -24,18 +17,31 @@ function createGame()
             let dum=document.createElement("div");
             dum.classList.add("tile");
             dum.id=j+"-"+i;
-            dum.addEventListener("click",function(e){
-                checkClick(e);
-            });
-            dum.addEventListener("mouseleave",function(e){
-                mouseOut(e);
-            });
-            dum.addEventListener("mouseenter",function(e){
-                mouseOver(e);
-            });
             dummy.appendChild(dum);
         }
         document.getElementById("container").appendChild(dummy);
+    }
+    document.getElementById("start-button").addEventListener("click",initializeGame);
+    addListeners();
+}
+function initializeGame()
+{
+    currentScore=0;
+    unlockCount=0;
+    winning=1;
+    startTime=new Date().getTime() / 1000;
+    let tile;
+    for(let i=0;i<20;i++)
+    {
+        for(let j=0;j<20;j++)
+        {
+            tile=document.getElementById(i+"-"+j);
+            tile.innerHTML="";
+            tile.classList.remove("mine");
+            tile.classList.remove("unlocked");
+            tile.classList.remove("flagged");
+            tile.classList.remove("hasNumber");
+        }
     }
     let count=50,x,y;
     while(count>0)
@@ -52,6 +58,31 @@ function createGame()
         }
     }
     scoreUpdater=setInterval(updateScore,1000);
+}
+function addListeners()
+{
+    let tile;
+    document.addEventListener("keypress",function(e){
+        if(winning==1)
+        checkKeyPress(e);
+    });
+    for(let i=0;i<20;i++)
+    {
+        for(let j=0;j<20;j++)
+        {
+            tile=document.getElementById(i+"-"+j);
+            tile.addEventListener("click",function(e){
+                if(winning==1)
+                checkClick(e);
+            });
+            tile.addEventListener("mouseleave",function(e){
+                mouseOut(e);
+            });
+            tile.addEventListener("mouseenter",function(e){
+                mouseOver(e);
+            });
+        }
+    }
 }
 function checkClick(e)
 {
@@ -186,7 +217,8 @@ function gameOver()
 {
     if(winning==1)
     {
-        if(highScore<currentScore&&(unlockCount==350))
+        winning=0;
+        if((highScore>currentScore||highScore==-1)&&(unlockCount==350))
         {
             alert("WON");
             highScore=currentScore;
@@ -201,11 +233,12 @@ function gameOver()
 }
 function mouseOver(e)
 {
+    if(winning==1)
     currentTileID=e.target.id;
 }
 function mouseOut(e)
 {
-    if(e.target.id==currentTileID)
+    if(e.target.id==currentTileID&&winning==1)
     currentTileID="none";
 }
 function checkKeyPress(e)

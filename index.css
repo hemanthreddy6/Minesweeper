@@ -19,7 +19,7 @@ header{
     align-items: flex-start;
     flex-direction: row;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-evenly;
 }
 .score{
     background-color: #B83B5E;
@@ -27,7 +27,6 @@ header{
     border-radius: 5px;
     color:white;
     font-family: Poppins;
-    justify-content: space-between;
 }
 button{
     padding: 15px;
