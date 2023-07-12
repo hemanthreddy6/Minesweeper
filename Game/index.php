@@ -30,8 +30,8 @@
     ?>
     <header>
         <h1 id="title">Minesweeper</h1>
-        <p id="playername"><?php echo $_SESSION["username"]?></p>
-        <button id="logout"><a href="../logout.php">Logout</a></button>
+        <h3>Hello, <span id="playername"><?php echo $_SESSION["username"]?></span></h3>
+        <button id="logout">Logout</button>
     </header>
     <div id="main-container">
         <div id="container">
@@ -41,9 +41,10 @@
                 <p id="currentScore" class="score">Time: 0</p>
                 <p id="highScore" class="score">Personal Best: <?php echo $_SESSION["score"]?></p>
             </div>
+            <div id="leaderboard"></div>
             <div id="button-bar">
                 <button id="start-button">New Game</button>
-                <h1 id="result" style="height:60px"></h1>
+                <p id="result"></p>
             </div>
         </div>
     </div>

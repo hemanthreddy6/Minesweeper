@@ -23,7 +23,10 @@ function createGame()
         document.getElementById("container").appendChild(dummy);
     }
     document.getElementById("start-button").addEventListener("click",initializeGame);
+    document.getElementById("logout").addEventListener("click",logout);
     addListeners();
+    updateLeaderboard();
+    setInterval(updateLeaderboard,10000);
 }
 function initializeGame()
 {
@@ -341,4 +344,20 @@ function updateDatabase()
     data.append("score",highScore);
     score.send(data);
     console.log(name+" "+highScore);
+}
+function updateLeaderboard()
+{
+    let board=new XMLHttpRequest();
+    board.onreadystatechange=function(){
+        if(this.readyState==4&&this.status==200)
+        {
+            document.getElementById("leaderboard").innerHTML=this.responseText;
+        }
+    }
+    board.open("POST","leaderboard.php",true);
+    board.send();
+}
+function logout()
+{
+    window.location.href="../logout.php";
 }
