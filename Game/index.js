@@ -1,4 +1,4 @@
-let highScore=-1;
+let highScore=0;
 let currentScore;
 let startTime,endTime;
 let scoreUpdater;
@@ -8,6 +8,7 @@ let currentTileID="none";
 document.addEventListener("DOMContentLoaded",createGame);
 function createGame()
 {
+    highScore=parseInt((document.getElementById("highScore").innerHTML).substring(15,));
     for(let i=0;i<20;i++)
     {
         let dummy=document.createElement("div");
@@ -59,6 +60,7 @@ function initializeGame()
         }
     }
     document.getElementById("result").innerHTML="";
+    clearInterval(scoreUpdater);
     scoreUpdater=setInterval(updateScore,1000);
 }
 function addListeners()
@@ -215,7 +217,6 @@ function updateScore()
     currentScore=Math.floor(new Date().getTime() / 1000 - startTime);
     $("#currentScore").html("Time: "+currentScore);
 
-    console.log("A");
     if(unlockCount==350)
     gameOver();
 }
@@ -225,10 +226,11 @@ function gameOver()
     {
         document.getElementById("result").innerHTML="You Won!";
         winning=0;
-        if((highScore>currentScore||highScore==-1)&&(unlockCount==350))
+        if((highScore>currentScore||highScore==0)&&(unlockCount==350))
         {
             highScore=currentScore;
             $("#highScore").html("Personal Best: "+highScore);
+            updateDatabase();
         }
     }
     else
@@ -328,4 +330,15 @@ function spaceOnNumber()
             }
         }
     }
+}
+function updateDatabase()
+{
+    let name=document.getElementById("playername").innerHTML;
+    let score = new XMLHttpRequest();
+    score.open("POST","updateDatabase.php",true);
+    let data=new FormData();
+    data.append("name",name);
+    data.append("score",highScore);
+    score.send(data);
+    console.log(name+" "+highScore);
 }
