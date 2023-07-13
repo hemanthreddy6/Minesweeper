@@ -30,21 +30,21 @@
     ?>
     <header>
         <h1 id="title">Minesweeper</h1>
-        <h3>Hello, <span id="playername"><?php echo $_SESSION["username"]?></span></h3>
+        <h3 id="greetings">Hello, <span id="playername"><?php echo $_SESSION["username"]?></span></h3>
         <button id="logout">Logout</button>
     </header>
     <div id="main-container">
         <div id="container">
         </div>
         <div id="side-container">
+            <div id="leaderboard"></div>
             <div id="scoreTable">
                 <p id="currentScore" class="score">Time: 0</p>
                 <p id="highScore" class="score">Personal Best: <?php echo $_SESSION["score"]?></p>
             </div>
-            <div id="leaderboard"></div>
             <div id="button-bar">
                 <button id="start-button">New Game</button>
-                <p id="result"></p>
+                <p id="result">Please start the game</p>
             </div>
         </div>
     </div>

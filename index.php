@@ -146,7 +146,6 @@
                 <h1>MINESWEEPER</h1>
                 <figure>
                     <img id="logor" src="./Images/gameplay.png">
-                    <figcaption>Gameplay</figcaption>
                 </figure>
             </div>
             <div id="login-form">

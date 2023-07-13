@@ -5,6 +5,7 @@ let scoreUpdater;
 let unlockCount;
 let winning;
 let currentTileID="none";
+let longTouch;
 document.addEventListener("DOMContentLoaded",createGame);
 function createGame()
 {
@@ -65,6 +66,8 @@ function initializeGame()
     document.getElementById("result").innerHTML="";
     clearInterval(scoreUpdater);
     scoreUpdater=setInterval(updateScore,1000);
+    document.getElementById("result").innerHTML="Playing";
+    document.getElementById("result").style.color="black";
 }
 function addListeners()
 {
@@ -91,6 +94,12 @@ function addListeners()
             tile.addEventListener("mouseenter",function(e){
                 mouseOver(e);
             });
+            tile.addEventListener("touchstart",function(e){
+                longTouch=setTimeout(checkLongPress,500);
+            });
+            tile.addEventListener("touchend",function(e){
+                clearTimeout(longTouch);
+            })
         }
     }
 }
@@ -227,6 +236,7 @@ function gameOver()
 {
     if(winning==1)
     {
+        document.getElementById("result").style.color="green";
         document.getElementById("result").innerHTML="You Won!";
         winning=0;
         if((highScore>currentScore||highScore==0)&&(unlockCount==350))
@@ -238,8 +248,10 @@ function gameOver()
     }
     else
     {
+        document.getElementById("result").style.color="red";
         document.getElementById("result").innerHTML="You Lost.";
     }
+    displayMines();
     clearInterval(scoreUpdater);
 }
 function mouseOver(e)
@@ -270,9 +282,15 @@ function checkKeyPress(e)
         }
         else
         {
-            if(tile.innerHTML!="<img src=\"../Images/red-flag.png\" width=\"18px\" height=\"18px\">")
+            if(tile.innerHTML!="<img src=\"../Images/red-flag.png\" width=\"18px\" height=\"18px\">"&&
+            tile.innerHTML!="<img src=\"../Images/red-flag.png\" width=\"12px\" height=\"12px\">")
             {
-                tile.innerHTML="<img src=\"../Images/red-flag.png\" width=\"18px\" height=\"18px\">";
+                console.log(getComputedStyle(tile).height=="20px");
+                if(getComputedStyle(tile).height=="20px")
+                    tile.innerHTML="<img src=\"../Images/red-flag.png\" width=\"18px\" height=\"18px\">";
+                else
+                    tile.innerHTML="<img src=\"../Images/red-flag.png\" width=\"12px\" height=\"12px\">"
+                
                 tile.classList.add("flagged");
             }
             else
@@ -333,6 +351,8 @@ function spaceOnNumber()
             }
         }
     }
+
+    console.log(document.getElementById("container").height);
 }
 function updateDatabase()
 {
@@ -360,4 +380,58 @@ function updateLeaderboard()
 function logout()
 {
     window.location.href="../logout.php";
+}
+function displayMines()
+{
+    let tile;
+    for(let i=0;i<20;i++)
+    {
+        for(let j=0;j<20;j++)
+        {
+            tile=document.getElementById(i+"-"+j);
+            if(tile.classList.contains("mine"))
+            {
+                if(getComputedStyle(tile).height=="20px")
+                    tile.innerHTML="<img src=\"../Images/red-flag.png\" width=\"18px\" height=\"18px\">";
+                else
+                    tile.innerHTML="<img src=\"../Images/red-flag.png\" width=\"12px\" height=\"12px\">";
+            }
+            else
+            {
+                continue;
+            }
+        }
+    }
+}
+function checkLongPress()
+{
+    let tile=document.getElementById(currentTileID);
+    if(tile.classList.contains("unlocked"))
+    {
+        if(!tile.classList.contains("hasNumber"))
+        return;
+        else
+        {
+            spaceOnNumber();
+        }
+    }
+    else
+    {
+        if(tile.innerHTML!="<img src=\"../Images/red-flag.png\" width=\"18px\" height=\"18px\">"&&
+        tile.innerHTML!="<img src=\"../Images/red-flag.png\" width=\"12px\" height=\"12px\">")
+        {
+            console.log(getComputedStyle(tile).height=="20px");
+            if(getComputedStyle(tile).height=="20px")
+                tile.innerHTML="<img src=\"../Images/red-flag.png\" width=\"18px\" height=\"18px\">";
+            else
+                tile.innerHTML="<img src=\"../Images/red-flag.png\" width=\"12px\" height=\"12px\">"
+            
+            tile.classList.add("flagged");
+        }
+        else
+        {
+            tile.innerHTML="";
+            tile.classList.remove("flagged");
+        }
+    }
 }

@@ -1,13 +1,14 @@
 body{
     padding: 0;
     margin: 0;
+    overflow: auto;
 }
 header{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #6A2C70;
-    color: #F9ED69;
+    background-color: #070A52;
+    color: white;
 }
 #side-container{
     display: flex;
@@ -23,11 +24,11 @@ header{
     width: 100%;
     justify-content: space-evenly;
 }
-.score{
-    background-color: #B83B5E;
-    padding: 15px;
+.score,#result{
+    background-color: #FFF3E2;
+    padding: 10px 20px;
     border-radius: 5px;
-    color:white;
+    color:#331D2C;
     font-family: Poppins;
 }
 button{
@@ -47,7 +48,7 @@ button:hover{
     flex-direction: row;
     align-items: center;
     justify-content:space-evenly;
-    background-color: #F08A5D;
+    background-color: #77037B;
     padding: 20px 0px;
     height: calc(82vh);
 }
@@ -90,7 +91,6 @@ button:hover{
 .unlocked{
     background-color: rgba(128,128,128,0.7);
     border: 2px solid rgba(128,128,128,0.7);
-    color:b
 }
 .hasNumber{
     display: flex;
@@ -102,12 +102,31 @@ button:hover{
     justify-content: center;
     align-items: center;
 }
+a{
+    text-decoration: none;
+    color: white;
+}
+#leaderboard{
+    width: 500px;
+}
+#greetings{
+    font-family: Poppins;
+}
+#button-bar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+#result{
+    font-family: Poppins;
+}
 @media screen and (max-width: 1100px)
 {
     #main-container{
-        flex-direction: column;
-        height: calc(170vh);
-        justify-content: space-evenly;
+        flex-direction: column-reverse;
+        height: 1500px;
+        justify-content: space-between;
     }
     #scoreTable{
         height: 100px;
@@ -116,10 +135,84 @@ button:hover{
         height: 300px;
     }
 }
-a{
-    text-decoration: none;
-    color: white;
+
+@media screen and (max-height: 600px) {
+    #main-container{
+        height: 500px;
+    }
 }
-#leaderboard{
-    width: 500px;
+
+@media screen and (max-height: 600px) and (max-width: 1100px){
+    #main-container{
+        height: 880px;
+    }
+}
+
+@media screen and (max-width: 850px){
+    #scoreTable{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+    }
+    #main-container{
+        height: 960px;
+        flex-direction: column-reverse;
+        justify-content: space-between;
+    }
+    #result{
+        width: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 650px){
+    #main-container{
+        height: 980px;
+    }
+}
+
+@media screen and (max-width: 530px)
+{
+    header{
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 200px;
+    }
+    #title{
+        margin: 0;
+    }
+    #main-container{
+        flex-direction: column-reverse;
+        height: 830px;
+        justify-content: space-between;
+    }
+    .tile,.mine{
+        width: 14px;
+        height: 14px;
+        font-size: 10px;
+        border-top: 1.8px solid white;
+        border-left: 1.8px solid white;
+        border-bottom: 1.8px solid black;
+        border-right: 1.8px solid black;
+    }
+    .unlocked{
+        background-color: rgba(128,128,128,0.7);
+        border: 1.8px solid rgba(128,128,128,0.7);
+    }
+    #leaderboard{
+        width: 350px;
+        /* margin-top: 20px; */
+    }
+    #highScore{
+        width: 150px;
+    }
+    #result{
+        width: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
