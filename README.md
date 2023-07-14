@@ -37,3 +37,8 @@ This project consists of two main sections:
 ## Hosting
 
 This website is hosted at [Minesweeper](https://minesweeper.free.nf).
+
+## Screenshots
+
+![Landing Page](https://i.ibb.co/8jtb51t/Screenshot-4225.png)
+![Game Page](https://i.ibb.co/6Zhbzh4/Screenshot-4226.png)
