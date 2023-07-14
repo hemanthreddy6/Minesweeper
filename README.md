@@ -40,5 +40,5 @@ This website is hosted at [Minesweeper](https://minesweeper.free.nf).
 
 ## Screenshots
 
-![Landing Page](https://i.ibb.co/8jtb51t/Screenshot-4225.png)
-![Game Page](https://i.ibb.co/6Zhbzh4/Screenshot-4226.png)
+<a href="https://ibb.co/2jHStGH"><img src="https://i.ibb.co/Q6tkNyt/Screenshot-4225.png" alt="Screenshot-4225" border="0" width="550px"/></a>
+<a href="https://ibb.co/pPDZcD3"><img src="https://i.ibb.co/59DvmD5/Screenshot-4226.png" alt="Screenshot-4226" border="0" width="450px"/></a>
