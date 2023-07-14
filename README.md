@@ -36,4 +36,4 @@ This project consists of two main sections:
 
 ## Hosting
 
-This website is hosted at ____________.
+This website is hosted at [Minesweeper](https://minesweeper.free.nf).
